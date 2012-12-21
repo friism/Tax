@@ -16,6 +16,10 @@ namespace Tax
 			{
 				return -1;
 			}
+			if (modulo == 0)
+			{
+				modulo = 11;
+			}
 			var checkDigit = 11 - modulo;
 			return serial * 10 + checkDigit;
 		}
