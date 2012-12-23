@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Transactions;
 using Tax.Model;
 using Tax.Persistence;
 
@@ -22,49 +23,55 @@ namespace Tax
 
 			Console.WriteLine("Parellelism: {0}", parallelism);
 
-			GetSerials().AsParallel().WithDegreeOfParallelism(parallelism).ForAll(x =>
+			IEnumerable<int> serials;
+			do
 			{
-				try
+				serials = GetSerials();
+				serials.AsParallel().WithDegreeOfParallelism(parallelism).ForAll(x =>
 				{
-					var company = new Company()
+					try
 					{
-						Serial = x,
-					};
-
-					var cvrNumber = CvrHelper.ToCvr(x);
-					if (cvrNumber != -1)
-					{
-						company.Cvr = cvrNumber;
-
-						var contentHelper = new ContentHelper(Encoding.GetEncoding("ISO-8859-1"));
-						var document = contentHelper.GetContent(cvrNumber);
-
-						if (!document.DocumentNode.OuterHtml.Contains("Virksomhedsnavnet eller CVR/SE-nummeret findes ikke på skattelisterne for selskaber 2011"))
+						var company = new Company()
 						{
-							var extractor = new DataExtractor();
-							extractor.Extract(company, document);
-							Console.WriteLine("{0} Extracted {1} - {2}", company.Serial, company.Cvr, company.Name);
+							Serial = x,
+						};
+
+						var cvrNumber = CvrHelper.ToCvr(x);
+						if (cvrNumber != -1)
+						{
+							company.Cvr = cvrNumber;
+
+							var contentHelper = new ContentHelper(Encoding.GetEncoding("ISO-8859-1"));
+							var document = contentHelper.GetContent(cvrNumber);
+
+							if (!document.DocumentNode.OuterHtml.Contains("Virksomhedsnavnet eller CVR/SE-nummeret findes ikke på skattelisterne for selskaber 2011"))
+							{
+								var extractor = new DataExtractor();
+								extractor.Extract(company, document);
+								Console.WriteLine("{0} Extracted {1} - {2}", company.Serial, company.Cvr, company.Name);
+							}
+							else
+							{
+								Console.WriteLine("{0} Disregarded {1}", company.Serial, company.Cvr);
+							}
 						}
-						else
+
+						using (var context = new Context())
 						{
-							Console.WriteLine("{0} Disregarded {1}", company.Serial, company.Cvr);
+							context.Companies.Add(company);
+							context.SaveChanges();
 						}
 					}
-
-					using (var context = new Context())
+					catch
 					{
-						context.Companies.Add(company);
-						context.SaveChanges();
+						// just leave that one for later
 					}
-				}
-				catch
-				{
-					// just leave that one for later
-				}
-			});
+				});
+			}
+			while (serials.Any());
 		}
 
-		private static IEnumerable<int> GetSerials(int firstSerial = 1000000, int highestSerial = 9999999)
+		private static IEnumerable<int> GetSerials(int firstSerial = 1000000, int highestSerial = 9999999, int batchSize = 10000)
 		{
 			var count = highestSerial - firstSerial;
 			var allSerials = Enumerable.Range(firstSerial, count);
@@ -77,10 +84,10 @@ namespace Tax
 			{
 				knownSerials = context.Companies.Select(x => x.Serial).ToList();
 			}
-			var remainingSerials = allSerials.Except(knownSerials).ToList();
+			var remainingSerials = allSerials.Except(knownSerials).Shuffle().Take(batchSize).ToList();
 
 			watch.Stop();
-			Console.WriteLine("Found {0} serials remaning in {1}ms", remainingSerials.Count(), watch.ElapsedMilliseconds);
+			Console.WriteLine("Found {0} serials remaining in {1}ms", remainingSerials.Count(), watch.ElapsedMilliseconds);
 
 			return remainingSerials;
 		}
