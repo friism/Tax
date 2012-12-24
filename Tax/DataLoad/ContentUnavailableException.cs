@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tax
+namespace Tax.DataLoad
 {
 	public class ContentUnavailableException : Exception
 	{

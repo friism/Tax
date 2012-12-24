@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Tax.Model;
 
-namespace Tax
+namespace Tax.DataLoad
 {
 	public class DataExtractor
 	{

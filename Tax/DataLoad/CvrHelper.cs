@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Tax
+namespace Tax.DataLoad
 {
 	public static class CvrHelper
 	{

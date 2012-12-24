@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Tax.DataLoad;
+using Xunit;
 using Xunit.Extensions;
 
 namespace Tax.Test

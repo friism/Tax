@@ -56,12 +56,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentHelper.cs" />
-    <Compile Include="ContentUnavailableException.cs" />
-    <Compile Include="CvrHelper.cs" />
-    <Compile Include="DataExtractor.cs" />
-    <Compile Include="EnumerableExtensions.cs" />
-    <Compile Include="HttpClientWrapper.cs" />
+    <Compile Include="DataLoad\ContentHelper.cs" />
+    <Compile Include="DataLoad\ContentUnavailableException.cs" />
+    <Compile Include="DataLoad\CvrHelper.cs" />
+    <Compile Include="DataLoad\DataExtractor.cs" />
+    <Compile Include="DataLoad\DataLoader.cs" />
+    <Compile Include="DataLoad\EnumerableExtensions.cs" />
+    <Compile Include="DataLoad\HttpClientWrapper.cs" />
     <Compile Include="Model\Company.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Persistence\Configuration.cs" />
