@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Transactions;
 using Tax.Model;
 using Tax.Persistence;
 
@@ -19,7 +18,10 @@ namespace Tax
 
 			var parallelism = 10;
 			var parallelismSetting = ConfigurationManager.AppSettings["parallelism"];
-			int.TryParse(parallelismSetting, out parallelism);
+			if (!string.IsNullOrEmpty(parallelismSetting))
+			{
+				int.TryParse(parallelismSetting, out parallelism);
+			}
 
 			Console.WriteLine("Parellelism: {0}", parallelism);
 
