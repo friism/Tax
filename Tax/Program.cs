@@ -1,4 +1,5 @@
-﻿using Tax.DataLoad;
+﻿using Tax.Analysis;
+using Tax.DataLoad;
 
 namespace Tax
 {
@@ -6,7 +7,8 @@ namespace Tax
 	{
 		static void Main(string[] args)
 		{
-			new DataLoader().Load();
+			//new DataLoader().Load();
+			new Analyzer().Analyze();
 		}
 	}
 }
