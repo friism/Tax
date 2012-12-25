@@ -28,7 +28,11 @@ namespace Tax.DataLoad
 
 		private string GetStringValue(HtmlDocument document, string title)
 		{
-			var titleElement = document.DocumentNode.SelectNodes("//div[@class='SLoutput']").Single(x => x.InnerText.StartsWith(title));
+			var titleElement = document.DocumentNode.SelectNodes("//div[@class='SLoutput']").SingleOrDefault(x => x.InnerText.StartsWith(title));
+			if (titleElement == null)
+			{
+				return null;
+			}
 			var valueElement = titleElement.NextSibling;
 			return valueElement.InnerText.Trim();
 		}
