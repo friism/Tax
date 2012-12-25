@@ -21,8 +21,13 @@ namespace Tax.DataLoad
 			}
 
 			company.TaxPaid = GetDecimalValue(document, "Selskabsskatten");
-			company.Revenue = GetDecimalValue(document, "Skattepligtig");
-			company.Losses = GetDecimalValue(document, "Underskud");
+			company.Revenue = GetDecimalValue(document, "Skattepligtig indkomst");
+			company.Losses = GetDecimalValue(document, "Underskud, der er trukket fra indkomsten");
+
+			company.FossilTaxPaid = GetDecimalValue(document, "Kulbrinteskatten");
+			company.FossilProfit = GetDecimalValue(document, "Skattepligtig kulbrinteindkomst");
+			company.FossilLosses = GetDecimalValue(document, "Underskud, der er trukket fra kulbrinteindkomsten");
+
 			company.Subsidiaries = GetSubsidiaryCvrNumbers(document);
 		}
 
@@ -39,9 +44,14 @@ namespace Tax.DataLoad
 
 		private decimal? GetDecimalValue(HtmlDocument document, string title)
 		{
-			var value = GetStringValue(document, title).Replace("kr", "").Trim();
+			var value = GetStringValue(document, title);
+			if (string.IsNullOrEmpty(value))
+			{
+				return null;
+			}
+
 			decimal result;
-			if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.GetCultureInfo("da"), out result))
+			if (decimal.TryParse(value.Replace("kr", "").Trim(), NumberStyles.Any, CultureInfo.GetCultureInfo("da"), out result))
 			{
 				return result;
 			}
