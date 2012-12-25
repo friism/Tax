@@ -11,6 +11,9 @@ namespace Tax.Model
 		public decimal? TaxPaid { get; set; }
 		public decimal? Revenue { get; set; }
 		public decimal? Losses { get; set; }
+		public decimal? FossilTaxPaid { get; set; }
+		public decimal? FossilProfit { get; set; }
+		public decimal? FossilLosses { get; set; }
 		public string Subsidiaries { get; set; }
 		public bool IsSubsidiary { get; set; }
 	}
