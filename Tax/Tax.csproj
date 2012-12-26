@@ -84,6 +84,7 @@
     <Compile Include="DataLoad\DataLoader.cs" />
     <Compile Include="DataLoad\EnumerableExtensions.cs" />
     <Compile Include="DataLoad\HttpClientWrapper.cs" />
+    <Compile Include="Export\Exporter.cs" />
     <Compile Include="Model\Company.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Persistence\Configuration.cs" />
