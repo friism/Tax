@@ -1,5 +1,6 @@
 ﻿using Tax.Analysis;
 using Tax.DataLoad;
+using Tax.Export;
 
 namespace Tax
 {
@@ -8,7 +9,9 @@ namespace Tax
 		static void Main(string[] args)
 		{
 			//new DataLoader().Load();
-			new Analyzer().Analyze();
+			//new Analyzer().Analyze();
+			//new DuplicateRemover().RemoveDuplicates();
+			new Exporter().Export();
 		}
 	}
 }
