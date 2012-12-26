@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\Analyzer.cs" />
+    <Compile Include="Analysis\DuplicateRemover.cs" />
     <Compile Include="DataLoad\ContentHelper.cs" />
     <Compile Include="DataLoad\ContentUnavailableException.cs" />
     <Compile Include="DataLoad\CvrHelper.cs" />
